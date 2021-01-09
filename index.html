@@ -1,0 +1,68 @@
+<html>
+<head>
+	<title>can it http/2?</title>
+	<style type="text/css">
+body {
+	font-family: monospace;
+}
+input {
+	border: solid black 2px;
+	color: black;
+	background: white;
+	padding: .25em;
+	outline: none;
+}
+.err { background: red; }
+.fail { background: orange; }
+.success { background: green; }
+.status {
+	color: white;
+	padding: 1em;
+	display: inline-block;
+}
+.urlbox {
+	width: 20em;
+}
+	</style>
+</head>
+<body>
+	<div>
+		<form action="/" method="POST" id="form">
+			Put the link to check:
+			<input
+				class="urlbox"
+				value="{{ .Placeholder }}"
+				type="text"
+				name="url"
+			/>
+			<input type="submit" value="Submit">
+			<span id="status"></span>
+		</form>
+	</div>
+	<div>
+	{{ if ne .Err "" }}
+		<div class="status err">
+			we couldn't even make a request :(
+			<br/>
+			{{ .Err }}
+		</div>
+	{{ else if .Success }}
+		<div class="status success">yay, {{ .Proto }} worked!</div>
+	{{ else if ne .Proto "" }}
+		<div class="status fail">nope, fell back to {{ .Proto }}</div>
+	{{ end }}
+	</div>
+	<script type="text/javascript">
+document
+	.getElementById('form')
+	.addEventListener(
+		'submit',
+		function(){
+			document
+				.getElementById('status')
+				.innerHTML += '<span>requesting...</span>';
+		},
+	);
+	</script>
+</body>
+</html>
